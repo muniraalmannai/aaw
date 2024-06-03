@@ -26,6 +26,7 @@ func AsciiTable(input, banner string) (string, error) {
 			lnum[a+1] = 0
 		}
 	}
+
 	// Split the lnum array when there are two consecutive zeros
 	var parts [][]int
 	var currentPart []int
@@ -60,21 +61,18 @@ func Table(lnum []int, data []byte) string {
 	var result strings.Builder
 	// Convert file content to string
 	text := string(data)
-
 	// Split the content into lines
 	lines := strings.Split(text, "\n")
-
 	// Print the lines corresponding to the line numbers
 	for k := 0; k < 8; k++ {
 		for _, lineNum := range lnum {
 			if lineNum != 0 && lineNum-1 < len(lines) {
-				result.WriteString(lines[lineNum-1])
+				result.WriteString(strings.Replace(lines[lineNum-1], "\r", "", -1))
 			} else {
 				break
 			}
 		}
 		result.WriteString("\n")
-
 		// Increment the line numbers
 		for j := 0; j < len(lnum); j++ {
 			if lnum[j] != 0 {
@@ -105,7 +103,6 @@ func checkLastElement(arrays [][]int) bool {
 	if len(lastArray) == 0 {
 		return false
 	}
-
 	lastElement := lastArray[len(lastArray)-1]
 	return lastElement == 0
 }
