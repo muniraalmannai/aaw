@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASCII Art Generator</title>
+</head>
+<body>
+    <h1>ASCII Art Generator</h1>
+    <!-- Form for user input -->
+    <form action="/ascii-art" method="post"> <!-- When the form is submitted, it sends a POST request to /ascii-art -->
+        <label for="text">Text:</label>
+        <input type="text" id="text" name="text" required> <!-- Text input field -->
+        <br>
+        <label for="banner">Banner:</label>
+        <select id="banner" name="banner"> <!-- Dropdown to select the banner style -->
+            <option value="standard">Standard</option>
+            <option value="shadow">Shadow</option>
+            <option value="thinkertoy">Thinkertoy</option>
+        </select>
+        <br>
+        <button type="submit">Generate</button> <!-- Submit button -->
+    </form>
+
+    <!-- If there is ASCII art to display, it will show up here -->
+    {{if .AsciiArt}}
+    <h2>Result:</h2>
+    <pre>{{.AsciiArt}}</pre> <!-- Area to display the generated ASCII art -->
+    {{end}}
+</body>
+</html>
