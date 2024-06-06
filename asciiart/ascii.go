@@ -10,13 +10,15 @@ func AsciiTable(input, filename string) (string, error) {
 	lines := strings.Split(input, "\\n") // Split the input by \n to handle multi-line input
 	var result strings.Builder
 
-	for _, line := range lines {
+	for i, line := range lines {
 		lineResult, err := processLine(line, filename)
 		if err != nil {
 			return "", err
 		}
 		result.WriteString(lineResult)
-		result.WriteString("\n") // Add a newline after processing each line
+		if i < len(lines)-1 {
+			result.WriteString("\n") // Add a newline between lines but not after the last one
+		}
 	}
 
 	return result.String(), nil
@@ -95,7 +97,9 @@ func Table(lnum []int, data []byte) (string, error) {
 				return "", fmt.Errorf("line number out of range: %d (total lines: %d)", lineNum, len(lines))
 			}
 		}
-		result.WriteString("\n")
+		if k < 7 {
+			result.WriteString("\n") // Add a newline after each line except the last one
+		}
 		// Increment the line numbers
 		for j := 0; j < len(lnum); j++ {
 			if lnum[j] != 0 {
@@ -126,6 +130,7 @@ func checkLastElement(arrays [][]int) bool {
 	if len(lastArray) == 0 {
 		return false
 	}
+
 	lastElement := lastArray[len(lastArray)-1]
 	return lastElement == 0
 }
