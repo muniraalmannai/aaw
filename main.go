@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"asciiart/asciiart" // Ensure this import path matches your project structure
+	"asciiart/asciiart"
 )
 
 func main() {
