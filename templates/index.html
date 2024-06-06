@@ -6,26 +6,35 @@
     <title>ASCII Art Generator</title>
 </head>
 <body>
-    <h1>ASCII Art Generator</h1>
-    <!-- Form for user input -->
-    <form action="/ascii-art" method="post"> <!-- When the form is submitted, it sends a POST request to /ascii-art -->
-        <label for="text">Text:</label>
-        <input type="text" id="text" name="text" required> <!-- Text input field -->
-        <br>
-        <label for="banner">Banner:</label>
-        <select id="banner" name="banner"> <!-- Dropdown to select the banner style -->
-            <option value="standard">Standard</option>
-            <option value="shadow">Shadow</option>
-            <option value="thinkertoy">Thinkertoy</option>
-        </select>
-        <br>
-        <button type="submit">Generate</button> <!-- Submit button -->
-    </form>
+    <table style="width:100%; height:100vh;">
+        <tr>
+            <td align="center" valign="middle">
+                <div>
+                    <h1>ASCII Art Generator</h1>
+                    <!-- Form for user input -->
+                    <form action="/ascii-art" method="post"> <!-- When the form is submitted, it sends a POST request to /ascii-art -->
+                        <label for="text">Text:</label>
+                        <br>
+                        <textarea id="text" name="text" rows="4" cols="50" required></textarea> <!-- Multiline text input field -->
+                        <br><br>
+                        <label for="banner">Banner:</label>
+                        <select id="banner" name="banner"> <!-- Dropdown to select the banner style -->
+                            <option value="standard">Standard</option>
+                            <option value="shadow">Shadow</option>
+                            <option value="thinkertoy">Thinkertoy</option>
+                        </select>
+                        <br><br>
+                        <button type="submit">Generate</button> <!-- Submit button -->
+                    </form>
 
-    <!-- If there is ASCII art to display, it will show up here -->
-    {{if .AsciiArt}}
-    <h2>Result:</h2>
-    <pre>{{.AsciiArt}}</pre> <!-- Area to display the generated ASCII art -->
-    {{end}}
+                    <!-- If there is ASCII art to display, it will show up here -->
+                    {{if .AsciiArt}}
+                    <h2>Result:</h2>
+                    <pre>{{.AsciiArt}}</pre> <!-- Area to display the generated ASCII art -->
+                    {{end}}
+                </div>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

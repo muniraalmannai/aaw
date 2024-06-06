@@ -1,12 +1,13 @@
 package main
 
 import (
-	"asciiart/asciiart"
 	"fmt"
 	"html/template"
 	"net/http"
 	"path/filepath"
-	// Update the import path to match your module structure
+	"strings"
+
+	"asciiart/asciiart" // Ensure this import path matches your project structure
 )
 
 var banners = map[string]string{
@@ -18,7 +19,10 @@ var banners = map[string]string{
 func main() {
 	http.HandleFunc("/", homeHandler)              // Handle requests to the home page
 	http.HandleFunc("/ascii-art", asciiArtHandler) // Handle form submissions
-	http.ListenAndServe(":8080", nil)              // Start the server on port 8080
+
+	port := ":8080"
+	fmt.Printf("Server is running at http://localhost%s\n", port)
+	http.ListenAndServe(port, nil) // Start the server on port 8080
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
@@ -44,7 +48,10 @@ func asciiArtHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	asciiArt, err := generateAsciiArt(text, banner) // Generate ASCII art
+	// Replace newlines with \n
+	modifiedText := strings.ReplaceAll(text, "\n", "\\n")
+
+	asciiArt, err := generateAsciiArt(modifiedText, banner) // Generate ASCII art
 	if err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
@@ -80,11 +87,6 @@ func generateAsciiArt(text, banner string) (string, error) {
 }
 
 func ModifyString(input string) string {
-	modifiedString := ""
-	for _, char := range input {
-		if char >= ' ' && char <= '~' {
-			modifiedString += string(char)
-		}
-	}
-	return modifiedString
+	// Replace newlines with \n
+	return strings.ReplaceAll(input, "\n", "\\n")
 }

@@ -6,16 +6,35 @@ import (
 	"strings"
 )
 
-func AsciiTable(input, banner string) (string, error) {
-	str := []rune(input)
+func AsciiTable(input, filename string) (string, error) {
+	lines := strings.Split(input, "\\n") // Split the input by \n to handle multi-line input
+	var result strings.Builder
+
+	for _, line := range lines {
+		lineResult, err := processLine(line, filename)
+		if err != nil {
+			return "", err
+		}
+		result.WriteString(lineResult)
+		result.WriteString("\n") // Add a newline after processing each line
+	}
+
+	return result.String(), nil
+}
+
+func processLine(line, filename string) (string, error) {
+	str := []rune(line)
 	lnum := []int{}
-	data, err := ioutil.ReadFile(banner)
+	data, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return "", fmt.Errorf("error reading file: %v", err)
 	}
 
 	// Calculate the line numbers for each character
 	for i := 0; i < len(str); i++ {
+		if int(str[i]) < 32 || int(str[i]) > 126 {
+			return "", fmt.Errorf("character out of range: %v", str[i])
+		}
 		fline := ((int(str[i]) - 32) * 9) + 2
 		lnum = append(lnum, fline)
 	}
@@ -48,7 +67,11 @@ func AsciiTable(input, banner string) (string, error) {
 		if EqualToZero(part) {
 			result.WriteString("\n")
 		} else {
-			result.WriteString(Table(part, data))
+			tableOutput, err := Table(part, data)
+			if err != nil {
+				return "", err
+			}
+			result.WriteString(tableOutput)
 		}
 	}
 	if checkLastElement(parts) {
@@ -57,7 +80,7 @@ func AsciiTable(input, banner string) (string, error) {
 	return result.String(), nil
 }
 
-func Table(lnum []int, data []byte) string {
+func Table(lnum []int, data []byte) (string, error) {
 	var result strings.Builder
 	// Convert file content to string
 	text := string(data)
@@ -69,7 +92,7 @@ func Table(lnum []int, data []byte) string {
 			if lineNum != 0 && lineNum-1 < len(lines) {
 				result.WriteString(strings.Replace(lines[lineNum-1], "\r", "", -1))
 			} else {
-				break
+				return "", fmt.Errorf("line number out of range: %d (total lines: %d)", lineNum, len(lines))
 			}
 		}
 		result.WriteString("\n")
@@ -80,7 +103,7 @@ func Table(lnum []int, data []byte) string {
 			}
 		}
 	}
-	return result.String()
+	return result.String(), nil
 }
 
 // check if the part is equal to [0], add new
